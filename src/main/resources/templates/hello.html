@@ -1,0 +1,43 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Title</title>-->
+<!--</head>-->
+<!--<body>-->
+<!--<h1>인증을 무사히 완료하였습니다.</h1>-->
+<!--    <a href="javascript:;" class="btn_social"data-social="google">로그아웃</a><br/>-->
+<!--    <script>-->
+<!--        let socials = document.getElementsByClassName("btn_social");-->
+<!--        for(let social of socials) {-->
+<!--            social.addEventListener('click', function(){-->
+<!--                let socialType = this.getAttribute('data-social');-->
+<!--                location.href="/oauth2/authorization/" + socialType;-->
+<!--            })-->
+<!--        }-->
+<!--    </script>-->
+<!--</body>-->
+<!--</html>-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>인증을 무사히 완료하였습니다.</h1>
+<a href="javascript:;" class="btn_social"data-social="google">구글로그아웃</a><br/>
+<a href="https://nid.naver.com/oauth2.0/token?grant_type=delete&client_id=YuvxzChVgHnw0Tq9rE_n&client_secret=9ln7tb9CWs&service_provider='NAVER'&access_token=" class="btn_social"data-social="naver">네이버로그아웃</a><br/>
+<a href="https://kauth.kakao.com/oauth/logout?client_id=6cac1f0831ae7ed68e15bc57e0421cb4&logout_redirect_uri=http://localhost:8080">로그아웃</a>
+<script>
+        let socials = document.getElementsByClassName("btn_social");
+        for(let social of socials) {
+            social.addEventListener('click', function(){
+                let socialType = this.getAttribute('data-social');
+                location.href="/oauth2/authorization/" + socialType;
+            })
+        }
+    </script>
+</body>
+</html>

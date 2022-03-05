@@ -1,0 +1,45 @@
+
+spring:
+  h2:
+    console:
+      enabled: true
+      path: /console
+  sql:
+    init:
+      data-locations:
+        - classpath: schema.sql
+  thymeleaf:
+    cache: false
+  datasource:
+    url: jdbc:mysql://localhost:3306/valueup_user?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul&serverTimezone=UTC&characterEncoding=UTF-8
+    username: root
+    password: rosie0804!!
+    initialization-mode: always
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    defer-datasource-initialization: true
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 844754341863-6acs4l4erlpncj8kntk2bl5hpue8pln5.apps.googleusercontent.com
+            client-secret: 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
+custom:
+  oauth2:
+    kakao:
+      client-id: 6cac1f0831ae7ed68e15bc57e0421cb4
+    naver:
+      client-id: YuvxzChVgHnw0Tq9rE_n
+      client-secret: 9ln7tb9CWs
+server:
+  port: 8080
+
