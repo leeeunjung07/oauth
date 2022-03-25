@@ -4,6 +4,7 @@ spring:
     console:
       enabled: true
       path: /console
+ # profiles: init
   sql:
     init:
       data-locations:
@@ -15,6 +16,7 @@ spring:
     username: root
     password: rosie0804!!
     initialization-mode: always
+#    platform: oauth2
 
   jpa:
     show-sql: true
@@ -24,6 +26,7 @@ spring:
       hibernate:
         format_sql: true
     database: mysql
+   # properties.hibernate.dialect: org.hibernate.dialect.MySQL5InnoDBDialect
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     defer-datasource-initialization: true
   security:
@@ -36,7 +39,22 @@ spring:
 custom:
   oauth2:
     kakao:
-      client-id: 6cac1f0831ae7ed68e15bc57e0421cb4
+      authorization-grant-type: authorization_code
+      client-id:  6cac1f0831ae7ed68e15bc57e0421cb4
+      redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+      scope:
+        - profile
+        - account_email
+      client-authentication-method: POST
+      client-name: Kakao
+
+      provider:
+
+        kakao:
+          authorization-uri: https://kauth.kakao.com/oauth/authorize
+          token-uri: https://kauth.kakao.com/oauth/token
+          user-info-uri: https://kapi.kakao.com/v2/user/me
+          user-name-attribute: id
     naver:
       client-id: YuvxzChVgHnw0Tq9rE_n
       client-secret: 9ln7tb9CWs

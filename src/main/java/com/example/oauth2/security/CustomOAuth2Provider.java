@@ -11,10 +11,9 @@ public enum CustomOAuth2Provider {
         public ClientRegistration.Builder getBuilder(String registrationId) {
             ClientRegistration.Builder builder = getBuilder(registrationId,
               ClientAuthenticationMethod.POST, DEFAULT_LOGIN_REDIRECT_URL);
-            builder.scope("account_email","profile_image","profile_nickname");
-           // builder.authorizationUri("https://kauth.kakao.com/oauth/authorize");
-            builder.authorizationUri("https://kauth.kakao.com/oauth/authorize?client_id=6cac1f0831ae7ed68e15bc57e0421cb4&response_type=code");
-            builder.tokenUri("https://kauth.kakao.com/oauth/token?response_type=code&grant_type=authorization_code&client_id=6cac1f0831ae7ed68e15bc57e0421cb4");
+            builder.scope("account_email");
+            builder.authorizationUri("https://kauth.kakao.com/oauth/authorize");
+            builder.tokenUri("https://kauth.kakao.com/oauth/token");
             builder.userInfoUri("https://kapi.kakao.com/v2/user/me");
             builder.userNameAttributeName("id");
             builder.clientName("Kakao");

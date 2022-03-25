@@ -1,6 +1,16 @@
 package com.example.oauth2.service;
 
+import javax.servlet.http.HttpSession;
+import java.util.Collections;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+
 //import org.hibernate.validator.constraints.URL;
+import org.springframework.http.*;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
+
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.http.RequestEntity;
@@ -18,6 +28,7 @@ import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2UserAuthority;
+import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestClientException;
@@ -33,6 +44,12 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
+import static org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames.*;
+
+
+@Slf4j
+//@RequiredArgsConstructor
+@Service
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private static final String MISSING_USER_INFO_URI_ERROR_CODE = "missing_user_info_uri";
 
@@ -52,6 +69,80 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         restTemplate.setErrorHandler(new OAuth2ErrorResponseErrorHandler());
         this.restOperations = restTemplate;
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public String getAccessTokenJsonData(String code){
+        RestTemplate restTemplate = new RestTemplate();
+
+        // 헤더 설정
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        HttpEntity request = new HttpEntity(headers);
+
+        // URI 빌더 사용
+        UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl("https://kauth.kakao.com/oauth/token")
+                .queryParam("grant_type", GRANT_TYPE)
+                .queryParam("client_id", CLIENT_ID)
+                .queryParam("redirect_uri", REDIRECT_URI)
+                .queryParam("code", code)
+                .queryParam("client_secret", CLIENT_SECRET);
+
+        // 요청 URI과 헤더를 같이 전송
+        ResponseEntity<String> responseEntity = restTemplate.exchange(
+                uriComponentsBuilder.toUriString(),
+                HttpMethod.POST,
+                request,
+                String.class
+        );
+
+        if (responseEntity.getStatusCode() == HttpStatus.OK) {
+            return responseEntity.getBody();
+        }
+        return "error";
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -112,6 +203,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         }
 
         return new DefaultOAuth2User(authorities, userAttributes, userNameAttributeName);
+
+
     }
 
     private Map<String, Object> getUserAttributes(ResponseEntity<Map<String, Object>> response) {

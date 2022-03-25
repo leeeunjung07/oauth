@@ -2,6 +2,7 @@ package com.example.oauth2.security;
 
 
 import com.example.oauth2.service.CustomOAuth2UserService;
+import com.example.oauth2.service.KakaoOAuth2UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.oauth2.client.OAuth2ClientProperties;
@@ -26,23 +27,32 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import lombok.RequiredArgsConstructor;
+
+
 import static com.example.oauth2.security.SocialType.*;
 
+@RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-//    @Autowired
-//    private CustomOAuth2UserService userDetailService;
+    private final KakaoOAuth2UserService kakaoOAuth2UserService;
+
 
     @Override
     public void configure(HttpSecurity httpSecurity) throws Exception {
+
+
+
+        httpSecurity.oauth2Login().userInfoEndpoint().userService(kakaoOAuth2UserService);
+
         httpSecurity.authorizeRequests()
                     .antMatchers("/", "/oauth2/**", "/login/**", "/css/**",
                             "/images/**", "/js/**", "/console/**", "/favicon.ico/**")
                     .permitAll()
                     .antMatchers("/google").hasAuthority(GOOGLE.getRoleType())
-                    .antMatchers("/kakao").hasAuthority(KAKAO.getRoleType())
+//                    .antMatchers("/kakao").hasAuthority(KAKAO.getRoleType())
                     .antMatchers("/naver").hasAuthority(NAVER.getRoleType())
                     .anyRequest().authenticated()
                 .and()
@@ -58,19 +68,28 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                     .exceptionHandling()
                     .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"));
+
+
+
+
+
+
+
+
+
     }
 
-//    public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-//        clients.inMemory()
-//                .withClient("clientId") // 클라이언트 아이디
-//                .secret("{noop}secretKey")
-//                .authorizedGrantTypes("authorization_code","password", "refresh_token") // 가능한 토큰 발행 타입
-//                .scopes("read", "write") // 가능한 접근 범위
-//                .accessTokenValiditySeconds(60) // 토큰 유효 시간 : 1분
-//                .refreshTokenValiditySeconds(60*60) // 토큰 유효 시간 : 1시간
-//                .redirectUris("http://localhost:8080/callback") // 가능한 redirect uri
-//                .autoApprove(true);
-//    }
+////    public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
+////        clients.inMemory()
+////                .withClient("clientId") // 클라이언트 아이디
+////                .secret("{noop}secretKey")
+////                .authorizedGrantTypes("authorization_code","password", "refresh_token") // 가능한 토큰 발행 타입
+////                .scopes("read", "write") // 가능한 접근 범위
+////                .accessTokenValiditySeconds(60) // 토큰 유효 시간 : 1분
+////                .refreshTokenValiditySeconds(60*60) // 토큰 유효 시간 : 1시간
+////                .redirectUris("http://localhost:8080/callback") // 가능한 redirect uri
+////                .autoApprove(true);
+////    }
 
     @Bean
     public ClientRegistrationRepository clientRegistrationRepository(
@@ -88,6 +107,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             registrations.add(CustomOAuth2Provider.KAKAO.getBuilder("kakao")
                     .clientId(kakaoClientId)
                     .jwkSetUri("temp")
+                    .scope("account_email")
                     .build());
 
         registrations.add(CustomOAuth2Provider.NAVER.getBuilder("naver")
